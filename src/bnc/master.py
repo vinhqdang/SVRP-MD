@@ -73,7 +73,7 @@ def _extract_solution(model, x_vars, instance):
                 routes.append(Route(path))
     
     sol = Solution(routes=routes)
-    sol.compute_objective(instance.cost_fleet, instance.cost_penalty)
+    sol.evaluate(instance)
     return sol
 
 def solve(
@@ -98,7 +98,7 @@ def solve(
     model.optimize(cb.callback)
     
     result = {
-        'objective': model.ObjVal if model.SolCount > 0 else float('inf'),
+        'objective': float('inf'),
         'gap': model.MIPGap * 100 if model.SolCount > 0 else 100.0,
         'n_nodes': int(model.NodeCount),
         'solve_time_s': model.Runtime,
@@ -107,6 +107,7 @@ def solve(
     }
     if model.SolCount > 0:
         result['solution'] = _extract_solution(model, x_vars, instance)
+        result['objective'] = result['solution'].objective
     else:
         result['solution'] = None
     return result

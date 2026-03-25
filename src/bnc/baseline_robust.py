@@ -160,6 +160,9 @@ def solve_baseline_robust(
     from src.bnc.master import _extract_solution
     if model.SolCount > 0:
         result['solution'] = _extract_solution(model, x_vars, instance)
+        result['objective'] = result['solution'].objective
+        result['expected_penalty'] = result['solution'].expected_penalty
+        result['total_distance'] = result['solution'].total_distance
     else:
         result['solution'] = None
     return result

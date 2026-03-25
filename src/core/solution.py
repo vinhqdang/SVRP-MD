@@ -17,3 +17,19 @@ class Solution:
         self.objective = self.total_distance + c_f * self.n_vehicles \
                          + c_p * self.expected_penalty
         return self.objective
+
+    def evaluate(self, instance):
+        from src.oracle.route_eval import eval_route
+        self.total_distance = 0.0
+        self.expected_penalty = 0.0
+        for r in self.routes:
+            curr = 0
+            for c in r.customers:
+                self.total_distance += instance.distance[curr][c]
+                curr = c
+            self.total_distance += instance.distance[curr][0]
+            self.expected_penalty += eval_route(r, instance)
+        self.n_vehicles = len(self.routes)
+        self.objective = self.total_distance + instance.cost_fleet * self.n_vehicles \
+                         + instance.cost_penalty * self.expected_penalty
+        return self.objective

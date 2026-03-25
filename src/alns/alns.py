@@ -87,5 +87,5 @@ def run_alns(
     
     best = result.best_state
     final_sol = Solution(routes=best.routes)
-    final_sol.compute_objective(instance.cost_fleet, instance.cost_penalty)
+    final_sol.evaluate(instance)
     return final_sol
