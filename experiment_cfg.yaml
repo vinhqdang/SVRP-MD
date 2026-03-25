@@ -1,0 +1,11 @@
+algorithms:
+- branch_and_cut: true
+  name: baseline_robust
+- branch_and_cut: true
+  cuts:
+  - route
+  - jensen_set
+  name: svrp_exact
+instances: data/test_instances/*.json
+name: baseline_comparison
+time_limit_s: 60

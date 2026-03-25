@@ -4,6 +4,7 @@ from src.core.instance import load_instance
 from src.instance_gen.metrics import compute_instance_metrics
 from src.alns.alns import run_alns
 from src.bnc.master import solve
+from src.bnc.baseline_robust import solve_baseline_robust
 import pandas as pd
 
 def run_experiment(config_path: str, output_dir: str):
@@ -21,9 +22,12 @@ def run_experiment(config_path: str, output_dir: str):
                 warm = run_alns(inst, max_iterations=alg_cfg.get('alns_iterations', 50))
                 
             if alg_cfg.get('branch_and_cut', True):
-                result = solve(inst, warm_start=warm,
-                               time_limit_s=cfg.get('time_limit_s', 3600),
-                               cuts=alg_cfg.get('cuts', ['route', 'jensen_set']))
+                if alg_cfg['name'].lower() == 'baseline_robust':
+                    result = solve_baseline_robust(inst, time_limit_s=cfg.get('time_limit_s', 3600))
+                else:
+                    result = solve(inst, warm_start=warm,
+                                   time_limit_s=cfg.get('time_limit_s', 3600),
+                                   cuts=alg_cfg.get('cuts', ['route', 'jensen_set']))
             else:
                 result = {'solution': warm, 'objective': warm.objective,
                           'gap': None, 'proved_optimal': False,
