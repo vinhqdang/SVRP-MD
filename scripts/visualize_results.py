@@ -24,7 +24,14 @@ def generate_plots():
     plt.close()
     
     # 2. Objective Value Comparison across instances
-    pivot_df = df.pivot(index='instance', columns='algorithm', values='objective')
+    import numpy as np
+    
+    # Temporarily cap infinite objectives (infeasible instances) to a constant above the max finite value so it renders
+    max_finite = df.loc[df['objective'] != np.inf, 'objective'].max()
+    plot_df = df.copy()
+    plot_df.loc[plot_df['objective'] == np.inf, 'objective'] = max_finite * 1.1
+    
+    pivot_df = plot_df.pivot(index='instance', columns='algorithm', values='objective')
     
     plt.figure(figsize=(12, 6))
     pivot_df.plot(kind='bar', ax=plt.gca(), width=0.8, color=colors)
