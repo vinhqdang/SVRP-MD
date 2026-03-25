@@ -1,0 +1,15 @@
+name: "ablation_study"
+instances: "data/generated/large_scale/*.json"
+time_limit_s: 30
+algorithms:
+  - name: "Baseline_Robust"
+    branch_and_cut: true
+  - name: "STORM_ALNS_Only"
+    branch_and_cut: false
+    alns_warmstart: true
+    alns_iterations: 100
+  - name: "STORM_Exact"
+    branch_and_cut: true
+    alns_warmstart: true
+    alns_iterations: 100
+    cuts: ['route', 'jensen_set']
