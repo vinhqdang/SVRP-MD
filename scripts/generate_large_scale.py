@@ -25,6 +25,11 @@ def generate_instances():
                 inst.demand = demand
                 inst.__post_init__() 
                 
+                # Force tight settings to distinguish robust vs stochastic expected penalty!
+                inst.capacity = float(np.sum(np.abs(means)) * 0.4)
+                inst.cost_fleet = 100.0  # Make extra vehicles very expensive
+                inst.cost_penalty = 1.0  # Make recourse somewhat cheaper than a whole new vehicle
+                
                 inst.name = f"inst_n{n}_dr{int(dr*100)}_{seed}"
                 
                 data = {
